@@ -9,13 +9,11 @@ fun main() {
         val parts = line.split("   ")
         list1.add(Integer.parseInt(parts[0]))
         list2.add(Integer.parseInt(parts[1]))
-        map.merge(Integer.parseInt(parts[1]), 1) { a, b -> Integer.sum(a, b)}
+        map.merge(Integer.parseInt(parts[1]), 1, Integer::sum)
     }
 
-    var part1 = 0
-    var part2 = 0
-    list1.sort()
-    list2.sort()
+    var part1 = 0; var part2 = 0
+    list1.sort(); list2.sort()
     for (i in 0..<list1.size) {
         part1 += abs(list1[i] - list2[i])
         part2 += list1[i] * map.getValue(list1[i])
