@@ -1,22 +1,21 @@
 import kotlin.math.abs
 
 fun main() {
-    val list1 = arrayListOf<Int>()
-    val list2 = arrayListOf<Int>()
-    val map = hashMapOf<Int, Int>().withDefault { 0 }
+    val lists = Pair(mutableListOf<Int>(), mutableListOf<Int>())
 
     Any::class::class.java.getResourceAsStream("/day1.txt")?.bufferedReader()?.forEachLine { line ->
         val parts = line.split("   ")
-        list1.add(parts[0].toInt())
-        list2.add(parts[1].toInt())
-        map.merge(parts[1].toInt(), 1, Int::plus)
+        lists.first.add(parts[0].toInt())
+        lists.second.add(parts[1].toInt())
     }
-
+    val a = lists.second.groupBy { it }
+    val itemCount = a.mapValues { (_, v) -> v.size }
     var part1 = 0; var part2 = 0
-    list1.sort(); list2.sort()
-    for (i in 0..<list1.size) {
-        part1 += abs(list1[i] - list2[i])
-        part2 += list1[i] * map.getValue(list1[i])
+    lists.first.sort(); lists.second.sort()
+
+    lists.first.forEachIndexed { i, v ->
+        part1 += abs(v - lists.second[i])
+        part2 += v * itemCount.getOrDefault(v, 0)
     }
 
     println(part1)
