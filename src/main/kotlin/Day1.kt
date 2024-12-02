@@ -8,8 +8,7 @@ fun main() {
         lists.first.add(parts[0].toInt())
         lists.second.add(parts[1].toInt())
     }
-    val a = lists.second.groupBy { it }
-    val itemCount = a.mapValues { (_, v) -> v.size }
+    val itemCount = lists.second.groupBy { it }.mapValues { (_, v) -> v.size }
     var part1 = 0; var part2 = 0
     lists.first.sort(); lists.second.sort()
 
