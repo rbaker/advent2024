@@ -7,9 +7,9 @@ fun main() {
 
     Any::class::class.java.getResourceAsStream("/day1.txt")?.bufferedReader()?.forEachLine { line ->
         val parts = line.split("   ")
-        list1.add(Integer.parseInt(parts[0]))
-        list2.add(Integer.parseInt(parts[1]))
-        map.merge(Integer.parseInt(parts[1]), 1, Integer::sum)
+        list1.add(parts[0].toInt())
+        list2.add(parts[1].toInt())
+        map.merge(parts[1].toInt(), 1, Int::plus)
     }
 
     var part1 = 0; var part2 = 0
