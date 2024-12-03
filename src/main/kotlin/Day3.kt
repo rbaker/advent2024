@@ -7,23 +7,22 @@ fun main() {
     println(part2(text))
 }
 
-fun part1(text: String): Int {
-    var result = 0
-    mulRegex.findAll(text).forEach { match ->
-        val (a, b) = match.destructured
-        result += a.toInt() * b.toInt()
-    }
-    return result
-}
+fun part1(text: String): Int = getTotal(text)
 
 fun part2(text: String): Int {
     var result = 0
     val activeSections = "(?:do\\(\\)|^).*?(?:don't\\(\\)|\$)".toRegex()
     activeSections.findAll(text).forEach { section ->
-        mulRegex.findAll(section.value).forEach { match ->
-            val (a, b) = match.destructured
-            result += a.toInt() * b.toInt()
-        }
+        result += getTotal(section.value)
+    }
+    return result
+}
+
+fun getTotal(text: String): Int {
+    var result = 0
+    mulRegex.findAll(text).forEach { match ->
+        val (a, b) = match.destructured
+        result += a.toInt() * b.toInt()
     }
     return result
 }
