@@ -21,8 +21,9 @@ fun main() {
     println(part1)
     failList.forEach {
         val sorted = it.sortedWith(Comparator { o1: String, o2: String ->
-            if (!largerMap.getValue(o1).contains(o2)) return@Comparator 1
-            else return@Comparator -1
+            var comp = 1
+            if (largerMap.getValue(o1).contains(o2)) comp = -1
+            return@Comparator comp
         })
         part2 += sorted[sorted.size / 2].toInt()
     }
