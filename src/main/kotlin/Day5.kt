@@ -1,25 +1,30 @@
 
 fun main() {
-    val text = Any::class::class.java.getResource("/day5.txt")?.readText()
-    val parts = text!!.split("\r\n\r\n")
-    val largerMap = hashMapOf<String, MutableList<String>>() ; val smallerMap = hashMapOf<String, MutableList<String>>()
+    val parts = Any::class::class.java.getResource("/day5.txt")?.readText()?.split("\r\n\r\n")!!
+    val largerMap = hashMapOf<String, MutableList<String>>().withDefault { mutableListOf() }
     parts[0].split("\r\n").forEach {
         val split = it.split("|")
         largerMap.computeIfAbsent(split[0]) { mutableListOf() }.add(split[1])
-        smallerMap.computeIfAbsent(split[1]) { mutableListOf() }.add(split[0])
     }
-    var count = 0
+    var part1 = 0; var part2 = 0
     val failList = mutableListOf<List<String>>()
     parts[1].split("\r\n").forEach {
-        val nums = it.split(",")
-        for (i in nums.indices) {
-            if (nums.subList(0, i).any { num -> largerMap.getOrDefault(nums[i], emptyList()).contains(num) } ||
-                nums.subList(i + 1, nums.size).any { num -> smallerMap.getOrDefault(nums[i], emptyList()).contains(num) }) {
-                failList.add(nums)
+        val numbers = it.split(",")
+        for (i in numbers.indices) {
+            if (numbers.subList(0, i).any { num -> largerMap.getValue(numbers[i]).contains(num) }) {
+                failList.add(numbers)
                 return@forEach
             }
         }
-        count += nums[nums.size / 2].toInt()
+        part1 += numbers[numbers.size / 2].toInt()
     }
-    println(count)
+    println(part1)
+    failList.forEach {
+        val sorted = it.sortedWith(Comparator { o1: String, o2: String ->
+            if (!largerMap.getValue(o1).contains(o2)) return@Comparator 1
+            else return@Comparator -1
+        })
+        part2 += sorted[sorted.size / 2].toInt()
+    }
+    println(part2)
 }
