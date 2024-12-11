@@ -16,7 +16,7 @@ fun getStoneCount(numbers: List<String>, iterations: Int): Long {
                 it.key == "0" -> nextCounts["1"] = nextCounts.getOrDefault("1", 0L) + it.value
                 it.key.length % 2 == 0 -> {
                     val firstHalf = it.key.substring(0, it.key.length / 2)
-                    val secondHalf = it.key.substring(it.key.length / 2, it.key.length).toLong().toString()
+                    val secondHalf = it.key.substring(it.key.length / 2).toLong().toString()
                     nextCounts[firstHalf] = nextCounts.getOrDefault(firstHalf, 0L) + it.value
                     nextCounts[secondHalf] = nextCounts.getOrDefault(secondHalf, 0L) + it.value
                 }
