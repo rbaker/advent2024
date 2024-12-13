@@ -9,6 +9,16 @@ fun main() {
 fun calculateRegions(grid: List<String>, distinct: Boolean): Int {
     val visited = Array(grid.size) { BooleanArray(grid.size) }
 
+    fun getPerimeter(x: Int, y: Int, index: Int) = Perimeter(
+        Point(x, y), when (index) {
+            0 -> 'U'
+            1 -> 'D'
+            2 -> 'L'
+            3 -> 'R'
+            else -> throw IllegalArgumentException("Invalid direction index: $index")
+        }
+    )
+
     fun floodFill(r: Int, c: Int, letter: Char): Pair<Int, List<Perimeter>> {
         val stack = mutableListOf(Pair(r, c))
         var area = 0
@@ -23,14 +33,8 @@ fun calculateRegions(grid: List<String>, distinct: Boolean): Int {
             directions.forEachIndexed { index, (dx, dy) ->
                 val nx = x + dx
                 val ny = y + dy
-                if (nx < 0 || ny < 0 || nx >= grid.size || ny >= grid.size || grid[nx][ny] != letter) {
-                    perimeter.add(Perimeter(Point(x, y), when (index) {
-                        0 -> 'U'
-                        1 -> 'D'
-                        2 -> 'L'
-                        3 -> 'R'
-                        else -> throw IllegalArgumentException("Invalid direction index: $index")
-                    }))
+                if (nx !in grid.indices || ny !in grid.indices || grid[nx][ny] != letter) {
+                    perimeter.add(getPerimeter(x, y, index))
                 } else if (!visited[nx][ny]) {
                     stack.add(Pair(nx, ny))
                 }
@@ -40,17 +44,13 @@ fun calculateRegions(grid: List<String>, distinct: Boolean): Int {
         return Pair(area, perimeter)
     }
 
-    var res = 0
-    for (r in grid.indices) {
-        for (c in grid.indices) {
-            if (!visited[r][c]) {
-                val letter = grid[r][c]
-                val (area, perimeter) = floodFill(r, c, letter)
-                res += area * if (distinct) countContiguousBoundaries(perimeter) else perimeter.size
-            }
-        }
-    }
-    return res
+    return grid.indices.sumOf { x -> grid[x].indices.sumOf { y ->
+        if (!visited[x][y]) {
+            val letter = grid[x][y]
+            val (area, perimeter) = floodFill(x, y, letter)
+            area * if (distinct) countContiguousBoundaries(perimeter) else perimeter.size
+        } else 0
+    } }
 }
 
 fun countContiguousBoundaries(perimeters: List<Perimeter>): Int {
@@ -63,7 +63,6 @@ fun countContiguousBoundaries(perimeters: List<Perimeter>): Int {
             else -> throw IllegalArgumentException("Invalid direction: $direction")
         }
 
-        // Traverse and count distinct segments
         for (i in sortedBoundaries.indices) {
             if (i == 0 || !isContiguous(sortedBoundaries[i - 1], sortedBoundaries[i])) {
                 distinctBoundaries++
