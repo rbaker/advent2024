@@ -18,11 +18,8 @@ fun checkList(numbers: List<Int>): Boolean {
     var increased = false; var decreased = false
     for (i in 0..<numbers.size-1) {
         val diff = numbers[i] - numbers[i+1]
-        if (diff > 0) {
-            increased = true
-        } else {
-            decreased = true
-        }
+        if (diff > 0) increased = true
+        else decreased = true
         if (abs(diff) !in 1..3 || increased == decreased) {
             return false
         }
@@ -34,9 +31,7 @@ fun safeWithRemoval(numbers: List<Int>): Boolean {
     for (i in numbers.indices) {
         val list = numbers.toMutableList()
         list.removeAt(i)
-        if (checkList(list)) {
-            return true
-        }
+        if (checkList(list)) return true
     }
     return false
 }

@@ -1,5 +1,4 @@
-val directions = listOf(Pair(-1, 0), Pair(1, 0), Pair(0, -1), Pair(0, 1))
-
+val directions = listOf(Pair(0, -1), Pair(-1, 0), Pair(0, 1), Pair(1, 0))
 fun main() {
     val lines = Any::class::class.java.getResourceAsStream("/day10.txt")?.bufferedReader()?.readLines()!!
     val grid = mutableListOf<List<Int>>()
