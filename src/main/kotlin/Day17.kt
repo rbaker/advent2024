@@ -5,10 +5,20 @@ val instructions = mutableListOf<Int>()
 fun main() {
     val file = Any::class::class.java.getResource("/day17.txt")?.readText()!!
     val regex = "Register A: (\\d+)\\r\\nRegister B: (\\d+)\\r\\nRegister C: (\\d+)\\r\\n\\r\\nProgram: (.*)".toRegex().find(file)!!
-    val register = arrayOf(regex.groupValues[1].toLong(), regex.groupValues[2].toLong(), regex.groupValues[3].toLong())
+    var register = arrayOf(regex.groupValues[1].toLong(), regex.groupValues[2].toLong(), regex.groupValues[3].toLong())
     instructions.addAll(regex.groupValues[4].split(",").map { it.toInt() })
+    var outputList = getOutput(register)
+    println(outputList.joinToString(","))
+    /*var i = 109019475735322
+    do {
+        i += 1
+        register = arrayOf(i, 0, 0)
+        outputList = getOutput(register)
+        val a = outputList.joinToString(",")
+    } while (outputList != instructions && i < 109019485735322)
+    println(i)*/
+    register = arrayOf(109019476330651, 0, 0)
     println(getOutput(register).joinToString(","))
-    println(reverseEngineer(mutableListOf(7,1,3,4,1,2,6,7,1)))
 }
 
 fun reverseEngineer(target: MutableList<Int>): Long {
