@@ -1,32 +1,48 @@
 import kotlin.math.pow
 
-val instructions = mutableListOf<Long>()
+val instructions = mutableListOf<Int>()
 
 fun main() {
     val file = Any::class::class.java.getResource("/day17.txt")?.readText()!!
     val regex = "Register A: (\\d+)\\r\\nRegister B: (\\d+)\\r\\nRegister C: (\\d+)\\r\\n\\r\\nProgram: (.*)".toRegex().find(file)!!
-    var register = arrayOf(regex.groupValues[1].toLong(), regex.groupValues[2].toLong(), regex.groupValues[3].toLong())
-    instructions.addAll(regex.groupValues[4].split(",").map { it.toLong() })
-    var outputList = getOutput(register)
-    println(outputList.joinToString(","))
+    val register = arrayOf(regex.groupValues[1].toLong(), regex.groupValues[2].toLong(), regex.groupValues[3].toLong())
+    instructions.addAll(regex.groupValues[4].split(",").map { it.toInt() })
+    println(getOutput(register).joinToString(","))
+    println(reverseEngineer(mutableListOf(7,1,3,4,1,2,6,7,1)))
+}
 
-    /*var i = 0L
-    do {
-        i ++
-        register = arrayOf(i, 0, 0)
-        outputList = getOutput(register)
-        var a = outputList.reversed().joinToString("")
-        println("$i,$a")
-    } while (outputList != instructions)
-    println(i)*/
+fun reverseEngineer(target: MutableList<Int>): Long {
+    val register = arrayOf(0L, target.last().toLong(), 0L)
+    var pointer = instructions.size - 2
+    while (register[1] != 0L || register[2] != 0L || pointer != 0) {
+        val inst = instructions[pointer].toLong()
+        val operand = instructions[pointer + 1].toLong()
+        println("$pointer ---- $inst - $operand --- ${register.joinToString(" ")}")
+        when (inst) {
+            0L -> register[0] *= 1L shl getCombo(operand, register).toInt()
+            1L -> register[1] = register[1] xor operand
+            2L -> {
+                // Reconstruct mod
+                val modValue = register[1]
+                register[1] = modValue + 8 * (getCombo(operand, register) / 8)
+            }
+            4L -> register[1] = register[1] xor register[2]
+            6L -> register[1] *= 1L shl getCombo(operand, register).toInt()
+            7L -> register[2] *= 1L shl getCombo(operand, register).toInt()
+        }
+        pointer -= 2
+        if (pointer == -2 && (register[1] != 0L || register[2] != 0L)) pointer = instructions.size - 2
+    }
+    return register[0]
 }
 
 fun getOutput(register: Array<Long>): List<Int> {
     val outputList = mutableListOf<Int>()
     var pointer = 0
-    while (pointer in 0..<instructions.size) {
-        val inst = instructions[pointer]
-        val operand = instructions[pointer + 1]
+    while (pointer in instructions.indices) {
+        val inst = instructions[pointer].toLong()
+        val operand = instructions[pointer + 1].toLong()
+        println("$pointer ---- $inst - $operand --- ${register.joinToString(" ")}")
         when (inst) {
             0L -> register[0] /= 2.0.pow(getCombo(operand, register).toInt()).toLong()
             1L -> register[1] = register[1] xor operand
@@ -42,7 +58,6 @@ fun getOutput(register: Array<Long>): List<Int> {
             6L -> register[1] = register[0] / 2.0.pow(getCombo(operand, register).toInt()).toInt()
             7L -> register[2] = register[0] / 2.0.pow(getCombo(operand, register).toInt()).toInt()
         }
-        //println("$inst + $operand --- ${register.joinToString(" ")}")
         pointer += 2
     }
     return outputList
