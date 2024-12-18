@@ -7,14 +7,21 @@ fun main() {
         val a = p.split(",").map { it.toInt() }
         points.add(Point(a[0], a[1]))
     }
-    println(getShortestPath(points, 1024, 70))
+    val limit = 1024; val width = 70
+    println(getShortestPath(points, limit, width))
+    for (i in limit..points.size) {
+        if (getShortestPath(points, i, width) == 0) {
+            println(points[i-1])
+            break
+        }
+    }
 }
 
 fun getShortestPath(points: List<Point>, limit: Int, width: Int): Int {
     val truncatedPoints = points.subList(0, limit)
     val locations = mutableListOf<Point>()
     val goal = Point(width, width)
-    val pq = PriorityQueue<State>(compareBy<State> { it.cost })
+    val pq = PriorityQueue(compareBy<State> { it.cost })
     pq.add(State(Point(0, 0), 0, 0, mutableListOf(Point(0, 0))))
     var route = 0
     while (pq.isNotEmpty()) {
