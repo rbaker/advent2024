@@ -2,7 +2,7 @@ import java.awt.Point
 import java.util.*
 
 fun main() {
-    val maze = Any::class::class.java.getResource("/day16.txt")?.readText()?.split("\r\n")!!
+    val maze = Any::class::class.java.getResource("/day16.txt")?.readText()?.lines()!!
     val optimalPaths = findAllOptimalPaths(maze)
     println(optimalPaths[0].first)
     println(optimalPaths.flatMap { it.second }.toSet().size)

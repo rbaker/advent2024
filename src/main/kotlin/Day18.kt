@@ -8,26 +8,26 @@ fun main() {
         points.add(Point(a[0], a[1]))
     }
     val limit = 1024; val width = 70
-    println(getShortestPath(points, limit, width))
+    println(getShortestPath(points, limit, width).cost)
     for (i in limit..points.size) {
-        if (getShortestPath(points, i, width) == 0) {
+        if (getShortestPath(points, i, width).cost == 0) {
             println(points[i-1])
             break
         }
     }
 }
 
-fun getShortestPath(points: List<Point>, limit: Int, width: Int): Int {
+fun getShortestPath(points: List<Point>, limit: Int = points.size, width: Int,
+                    start: Point = Point(0,0), goal: Point = Point(width, width)): State {
     val truncatedPoints = points.subList(0, limit)
     val locations = mutableListOf<Point>()
-    val goal = Point(width, width)
     val pq = PriorityQueue(compareBy<State> { it.cost })
-    pq.add(State(Point(0, 0), 0, 0, mutableListOf(Point(0, 0))))
-    var route = 0
+    pq.add(State(start, 0, 0, mutableListOf(start)))
+    var end = State(Point(0, 0), 0, 0, mutableListOf())
     while (pq.isNotEmpty()) {
         val current = pq.poll()
         if (current.point == goal) {
-            route = current.cost
+            end = current
             break
         }
         for (d in directions) {
@@ -39,5 +39,5 @@ fun getShortestPath(points: List<Point>, limit: Int, width: Int): Int {
         }
         locations.add(current.point)
     }
-    return route
+    return end
 }
