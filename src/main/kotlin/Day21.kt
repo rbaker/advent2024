@@ -1,3 +1,5 @@
+import java.awt.Point
+
 val keypad = mapOf(
     '7' to Point(0, 0), '8' to Point(0, 1), '9' to Point(0, 2),
     '4' to Point(1, 0), '5' to Point(1, 1), '6' to Point(1, 2),
