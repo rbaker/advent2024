@@ -14,7 +14,7 @@ fun main() {
 fun getHighest(batteries: List<Int>, length: Int): Long {
     val maxes = mutableListOf<Int>()
     var tempBatteries = batteries.toMutableList()
-    for (i in length downTo 1) {
+    (length downTo 1).forEach { i ->
         val max = tempBatteries.subList(0, tempBatteries.size + 1 - i).max()
         maxes.add(max)
         tempBatteries = tempBatteries.subList(tempBatteries.indexOf(max) + 1, tempBatteries.size)
